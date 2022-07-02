@@ -1,0 +1,104 @@
+﻿@model MortgageCalcMVC.Models.Loan
+
+
+@{
+    ViewData["Title"] = "App Page";
+}
+
+<div class="container w-75">
+    <h1 class="mb-2">Loan Calculator</h1>
+    
+    <div class="row">
+        <div class="col">
+            <form asp-controller="Home" asp-action="App" method="post">
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label asp-for="Amount">Loan Amount:</label>
+                        <input type="number" class="form-control" id="lamount" min="1000" step="500" value="@Model.Amount" asp-for="Amount"/>
+                    </div>
+                    <div class="form-group col-12">
+                        <label asp-for="Term">Term:</label>
+                        <input type="number" class="form-control" id="lterm" min="1" max="60" value="@Model.Term" asp-for="Term"/>
+                    </div>
+                    <div class="form-group col-12">
+                        <label asp-for="Rate">Rate:</label>
+                        <input type="number" class="form-control" id="lrate" min="1" step="0.5" value="@Model.Rate" asp-for="Rate"/>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-dark mt-2 btn-cfOrange">Calculate</button>
+            </form>
+        </div>
+        <div class="col">
+            <div id="paymentTitle">
+                <p>Your Monthly Payment</p>
+            </div>
+            <p id="payment">
+                @Model.Payment.ToString("C")
+            </p>
+            <div class="row">
+                <div class="col-6">
+                    <label class="col-6 text-start">Total Principal</label>
+                </div>
+                <div class="col-6">
+                    <div class="text-end" id="totalPrincipal">
+                        @Model.Amount.ToString("C")
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label class="text-start">Total Interest</label>
+                </div>
+                <div class="col-6">
+                    <div class="text-end" id="totalInterest">
+                        @Model.TotalInterest.ToString("C")
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label class="text-start">Total Cost</label>
+                </div>
+                <div class="col-6">
+                    <div class="text-end" id="totalCost">
+                        @Model.TotalCost.ToString("C")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @if (Model.Payments.Count > 0)
+    {
+        <div class="row mt-5 overflow-auto">
+            <div class="col">
+                <table id="scheduleTable" class="table table-responsive table-hover table-striped">
+                    <thead class="text-white" id="tableheader">
+                    <tr>
+                        <th>Month</th>
+                        <th>Payment</th>
+                        <th>Principal</th>
+                        <th>Interest</th>
+                        <th>Total Interest</th>
+                        <th>Balance</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Payments)
+                        {
+                            <tr>
+                                <td>@item.Month</td>
+                                <td>@item.Payment.ToString("C")</td>
+                                <td>@item.MonthlyPrincipal.ToString("C")</td>
+                                <td>@item.MonthlyInterest.ToString("C")</td>
+                                <td>@item.TotalInterest.ToString("C")</td>
+                                <td>@item.Balance.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+</div>
